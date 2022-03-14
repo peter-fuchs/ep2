@@ -9,12 +9,12 @@ public class Body {
     private Vector3 massCenter; // position of the mass center.
     private Vector3 currentMovement;
 
-    public Body(Body b) {
-        this.mass = b.mass;
-        this.massCenter = new Vector3(b.massCenter);
-        this.currentMovement = new Vector3(b.currentMovement);
+    // Returns a copy of the body with new Vector3-objects for massCenter and currentMovement
+    private static Body copy(Body b) {
+        return new Body(b.mass, Vector3.copy(b.massCenter), Vector3.copy(b.currentMovement));
     }
 
+    // constructor
     public Body(double _mass, Vector3 _massCenter, Vector3 _currentMovement) {
         this.mass = _mass;
         this.massCenter = _massCenter;
@@ -32,7 +32,8 @@ public class Body {
     // and G being the gravitational constant.
     // Hint: see simulation loop in Simulation.java to find out how this is done.
     public Vector3 gravitationalForce(Body b) {
-        Vector3 copy = new Vector3(b.massCenter);
+        // copy so it doesn't change the value of b
+        Vector3 copy = Vector3.copy(b.massCenter);
         Vector3 direction = copy.minus(this.massCenter);
         double distance = direction.length();
         direction.normalize();
@@ -50,7 +51,7 @@ public class Body {
                 force.times(1 / this.mass).plus(this.massCenter).plus(this.currentMovement);
 
         // new minus old position.
-        Vector3 newMovement = new Vector3(newPosition).minus(this.massCenter);
+        Vector3 newMovement = Vector3.copy(newPosition).minus(this.massCenter);
 
         // update body state
         this.massCenter = newPosition;
@@ -67,9 +68,12 @@ public class Body {
     // Returns a new body that is formed by the collision of this body and 'b'. The impulse
     // of the returned body is the sum of the impulses of 'this' and 'b'.
     public Body merge(Body b) {
-        Body copy = new Body(b);
+        // copy so it doesn't change the value of b
+        Body copy = Body.copy(b);
+        // calculate new mass before saving bc we need old mass here
         double newMass = this.mass + copy.mass;
-        this.massCenter = new Vector3(this.massCenter).times(this.mass).plus(new Vector3(copy.massCenter).times(copy.mass)).times(1 / newMass);
+        // always copy the vectors so their value isn't wrongly changed (otherwise headaches...)
+        this.massCenter = Vector3.copy(this.massCenter).times(this.mass).plus(Vector3.copy(copy.massCenter).times(copy.mass)).times(1 / newMass);
         this.currentMovement = this.currentMovement.times(this.mass).plus(copy.currentMovement.times(copy.mass)).times(
                         1.0 / newMass);
         this.mass = newMass;

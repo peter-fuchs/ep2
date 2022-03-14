@@ -9,12 +9,12 @@ public class Vector3 {
     private double y;
     private double z;
 
-    public Vector3(Vector3 v) {
-        this.x = v.x;
-        this.y = v.y;
-        this.z = v.z;
+    // Returns a copy of a new vector-object with the according x-, y- and z-values
+    public static Vector3 copy(Vector3 v) {
+        return new Vector3(v.x, v.y, v.z);
     }
 
+    // constructor
     public Vector3(double _x, double _y, double _z) {
         this.x = _x;
         this.y = _y;

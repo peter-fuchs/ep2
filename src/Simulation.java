@@ -4,7 +4,26 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.Random;
 
-// TODO: insert answers to questions (Zusatzfragen) in 'Aufgabenblatt1.md' as comment.
+/**
+ * 1. Was versteht man unter Datenkapselung? Geben Sie ein Beispiel, wo dieses Konzept in dieser Aufgabenstellung angewendet wird.
+ * Datenkapselung beschreibt das Kontrollieren der Sichtbarkeit von Methoden, also welche Methoden und Funktionen von außenstehenden
+ * Klassen angesprochen werden können. Hierbei findet eine Datenkapselung statt, wenn Methoden auf "private" bis "packaged" gestellt werden.
+ * Abhängig von dieser Sichtbarkeit haben immer unterschiedliche Klassen Zugriff auf die Methoden.
+ * Ein Beispiel dafür kann in der Klasse "SpaceDraw" gefunden werden, wo die Methoden "limitAndDarken" und "kelvinToColor" nicht von außerhalb
+ * aufgerufen werden können.
+ *
+ * 2. Was versteht man unter Data Hiding? Geben Sie ein Beispiel, wo dieses Konzept in dieser Aufgabenstellung angewendet wird.
+ * Bei Data Hiding werden Attribute von Klassen/Objekten durch Ändern der Sichtbarkeit vor anderen Klassen versteckt.
+ * Dies sorgt dafür, dass andere Objekte die Parameter nur durch gezielte Methoden verändern können und so die "Richtigkeit" der Daten
+ * leichter überprüft werden kann (zum Beispiel in setter-Methoden).
+ * Dieses Konzept ist in den Klassen "Vector3" und "Body" ersichtlich, wo jeweils alle Attribute auf "private" gesetzt wurden.
+ *
+ * 3. Was steht bei einem Methodenaufruf links vom `.` (z.B. bei `SpaceDraw.massToColor(1e30)` oder
+ * `body.radius()`)? Woran erkennt man dabei Objektmethoden?
+ * Links vom Methodenaufruf steht entweder die Instanz eines Objektes einer Klasse (in dem Beispiel das Objekt body) oder der Name der Klasse selbst
+ * (zum Beispiel SpaceDraw).
+ * Objektmethoden erkennt man hierbei daran, dass davor ein Objekt steht (meistens werden diese kleingeschrieben).
+ */
 
 // Simulates the formation of a massive solar system.
 public class Simulation {
@@ -33,8 +52,6 @@ public class Simulation {
 
     // The main simulation method using instances of other classes.
     public static void main(String[] args) {
-
-        //TODO: change implementation of this method according to 'Aufgabenblatt1.md'.
 
         // simulation
         CodeDraw cd = new CodeDraw();
