@@ -5,18 +5,25 @@ import java.awt.*;
 // This class represents celestial bodies like stars, planets, asteroids, etc..
 public class Body {
 
-    //TODO: change modifiers.
-    public double mass;
-    public Vector3 massCenter; // position of the mass center.
-    public Vector3 currentMovement;
+    private double mass;
+    private Vector3 massCenter; // position of the mass center.
+    private Vector3 currentMovement;
 
-    //TODO: define constructor.
+    public Body(Body b) {
+        this.mass = b.mass;
+        this.massCenter = new Vector3(b.massCenter);
+        this.currentMovement = new Vector3(b.currentMovement);
+    }
+
+    public Body(double _mass, Vector3 _massCenter, Vector3 _currentMovement) {
+        this.mass = _mass;
+        this.massCenter = _massCenter;
+        this.currentMovement = _currentMovement;
+    }
 
     // Returns the distance between the mass centers of this body and the specified body 'b'.
     public double distanceTo(Body b) {
-
-        //TODO: implement method.
-        return 0;
+        return this.massCenter.distanceTo(b.massCenter);
     }
 
     // Returns a vector representing the gravitational force exerted by 'b' on this body.
@@ -25,9 +32,12 @@ public class Body {
     // and G being the gravitational constant.
     // Hint: see simulation loop in Simulation.java to find out how this is done.
     public Vector3 gravitationalForce(Body b) {
-
-        //TODO: implement method.
-        return null;
+        Vector3 copy = new Vector3(b.massCenter);
+        Vector3 direction = copy.minus(this.massCenter);
+        double distance = direction.length();
+        direction.normalize();
+        double force = Simulation.G * this.mass * b.mass / (distance * distance);
+        return direction.times(force);
     }
 
     // Moves this body to a new position, according to the specified force vector 'force' exerted
@@ -35,25 +45,35 @@ public class Body {
     // (Movement depends on the mass of this body, its current movement and the exerted force.)
     // Hint: see simulation loop in Simulation.java to find out how this is done.
     public void move(Vector3 force) {
+        // F = m*a -> a = F/m
+        Vector3 newPosition =
+                force.times(1 / this.mass).plus(this.massCenter).plus(this.currentMovement);
 
-        //TODO: implement method.
+        // new minus old position.
+        Vector3 newMovement = new Vector3(newPosition).minus(this.massCenter);
+
+        // update body state
+        this.massCenter = newPosition;
+        this.currentMovement = newMovement;
     }
 
     // Returns the approximate radius of this body.
     // (It is assumed that the radius r is related to the mass m of the body by r = m ^ 0.5,
     // where m and r measured in solar units.)
     public double radius() {
-
-        //TODO: implement method.
-        return 0d;
+        return SpaceDraw.massToRadius(this.mass);
     }
 
     // Returns a new body that is formed by the collision of this body and 'b'. The impulse
     // of the returned body is the sum of the impulses of 'this' and 'b'.
     public Body merge(Body b) {
-
-        //TODO: implement method.
-        return null;
+        Body copy = new Body(b);
+        double newMass = this.mass + copy.mass;
+        this.massCenter = new Vector3(this.massCenter).times(this.mass).plus(new Vector3(copy.massCenter).times(copy.mass)).times(1 / newMass);
+        this.currentMovement = this.currentMovement.times(this.mass).plus(copy.currentMovement.times(copy.mass)).times(
+                        1.0 / newMass);
+        this.mass = newMass;
+        return this;
     }
 
     // Draws the body to the specified canvas as a filled circle.
@@ -62,17 +82,16 @@ public class Body {
     // in 'Simulation.java').
     // Hint: call the method 'drawAsFilledCircle' implemented in 'Vector3'.
     public void draw(CodeDraw cd) {
-
-        //TODO: implement method.
+        cd.setColor(SpaceDraw.massToColor(this.mass));
+        this.massCenter.drawAsFilledCircle(cd, this.radius());
     }
 
     // Returns a string with the information about this body including
     // mass, position (mass center) and current movement. Example:
     // "5.972E24 kg, position: [1.48E11,0.0,0.0] m, movement: [0.0,29290.0,0.0] m/s."
     public String toString() {
-
-        //TODO: implement method.
-        return "";
+        return this.mass + " kg, position: " + this.massCenter.toString() + " m, movement: "
+                + this.currentMovement.toString() + " m/s";
     }
 
 }
