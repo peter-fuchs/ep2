@@ -4,20 +4,50 @@
 public class BodyForceMap {
 
     //TODO: declare variables.
+    private Body[] keys;
+    private Vector3[] values;
+    private int currSize;
 
     // Initializes this map with an initial capacity.
     // Precondition: initialCapacity > 0.
     public BodyForceMap(int initialCapacity) {
 
         //TODO: define constructor.
+        this.keys = new Body[initialCapacity];
+        this.values = new Vector3[initialCapacity];
+        this.currSize = 0;
     }
 
     // Adds a new key-value association to this map. If the key already exists in this map,
     // the value is replaced and the old value is returned. Otherwise 'null' is returned.
     // Precondition: key != null.
     public Vector3 put(Body key, Vector3 force) {
-
         //TODO: implement method.
+        int index = this.getIndex(key);
+        if (index > 0 && this.keys[index] != null && this.keys[index].mass() == key.mass()) {
+            Vector3 returnVal = this.values[index];
+            this.values[index] = force;
+            return returnVal;
+        } else {
+            for (int j = this.keys.length-1; j > index; --j) {
+                this.keys[j] = this.keys[j-1];
+                this.values[j] = this.values[j-1];
+            }
+            this.keys[index] = key;
+            this.values[index] = force;
+            this.currSize++;
+        }
+
+        if (this.currSize == this.keys.length) {
+            Body[] help = this.keys;
+            this.keys = new Body[this.keys.length * 2];
+            System.arraycopy(help, 0, this.keys, 0, help.length);
+
+            Vector3[] help2 = this.values;
+            this.values = new Vector3[this.values.length * 2];
+            System.arraycopy(help2, 0, this.values, 0, help2.length);
+        }
+
         return null;
     }
 
@@ -25,8 +55,34 @@ public class BodyForceMap {
     // associated with the specified body. Returns 'null' if the key is not contained in this map.
     // Precondition: key != null.
     public Vector3 get(Body key) {
+        // since getIndex returns the position to insert (+1 if it's the same)
+        // subtract 1 to get the correct index
+        int index = this.getIndex(key);
+        if (this.keys[index] != null && this.keys[index].mass() == key.mass()) {
+            return this.values[index];
+        } else {
+            return null;
+        }
+    }
 
-        //TODO: implement method.
-        return null;
+    public int size() {
+        return this.currSize;
+    }
+
+    private int getIndex(Body key) {
+        int left = 0;
+        int right = this.currSize - 1;
+        while (left <= right) {
+            int middle = left + ((right - left) / 2);
+            if (keys[middle].mass() == key.mass()) {
+                return middle;
+            }
+            if (keys[middle].mass() < key.mass()) {
+                right = middle - 1;
+            } else {
+                left = middle + 1;
+            }
+        }
+        return right+1;
     }
 }

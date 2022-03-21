@@ -6,12 +6,15 @@
 public class BodyQueue {
 
     //TODO: declare variables.
+    private Body[] bodies;
+    private int currPos;
 
     // Initializes this queue with an initial capacity.
     // Precondition: initialCapacity > 0.
     public BodyQueue(int initialCapacity) {
-
         //TODO: define constructor.
+        this.bodies = new Body[initialCapacity];
+        this.currPos = 0;
     }
 
     // Initializes this queue as an independent copy of the specified queue.
@@ -19,28 +22,44 @@ public class BodyQueue {
     // and vice versa.
     // Precondition: q != null.
     public BodyQueue(BodyQueue q) {
-
         //TODO: define constructor.
+        this.bodies = new Body[q.bodies.length];
+        for (int i = 0; i < this.bodies.length; ++i) {
+            if (q.bodies[i] == null) {
+                this.currPos = i;
+                break;
+            }
+            this.bodies[i] = q.bodies[i];
+        }
+
     }
 
     // Adds the specified body 'b' to this queue.
     public void add(Body b) {
-
         //TODO: implement method.
+        if (this.bodies.length - 1 >= 0) System.arraycopy(this.bodies, 0, this.bodies, 1, this.bodies.length - 1);
+        this.bodies[0] = b;
+        this.currPos++;
+        if (this.bodies.length == this.currPos) {
+            Body[] help = this.bodies;
+            this.bodies = new Body[this.bodies.length * 2];
+            System.arraycopy(help, 0, this.bodies, 0, help.length);
+        }
     }
 
     // Retrieves and removes the head of this queue, or returns 'null'
     // if this queue is empty.
     public Body poll() {
-
-        //TODO: implement method.
-        return null;
+        if (this.currPos == 0) {
+            return null;
+        }
+        Body b = this.bodies[--this.currPos];
+        this.bodies[this.currPos] = null;
+        return b;
     }
 
     // Returns the number of bodies in this queue.
     public int size() {
-
-        //TODO: implement method.
-        return -1;
+        return this.currPos;
     }
 }

@@ -20,7 +20,7 @@ import java.util.Random;
  *
  * 3. Was steht bei einem Methodenaufruf links vom `.` (z.B. bei `SpaceDraw.massToColor(1e30)` oder
  * `body.radius()`)? Woran erkennt man dabei Objektmethoden?
- * Links vom Methodenaufruf steht entweder die Instanz eines Objektes einer Klasse (in dem Beispiel das Objekt body) oder der Name der Klasse selbst
+ * Links vom Methodenaufruf steht entweder die Instanz einer Klasse (in dem Beispiel das Objekt body) oder der Name der Klasse selbst
  * (zum Beispiel SpaceDraw).
  * Objektmethoden erkennt man hierbei daran, dass davor ein Objekt steht (meistens werden diese kleingeschrieben).
  */
@@ -55,24 +55,28 @@ public class Simulation {
 
         // simulation
         CodeDraw cd = new CodeDraw();
-        Body[] bodies = new Body[NUMBER_OF_BODIES];
-        Vector3[] forceOnBody = new Vector3[bodies.length];
+        // Body[] bodies = new Body[NUMBER_OF_BODIES];
+        BodyQueue bq = new BodyQueue(NUMBER_OF_BODIES);
+        BodyForceMap bfm = new BodyForceMap(NUMBER_OF_BODIES);
+        Vector3[] forceOnBody = new Vector3[bq.size()];
 
         Random random = new Random(2022);
 
-        for (int i = 0; i < bodies.length; i++) {
-            double mass = Math.abs(random.nextGaussian()) * OVERALL_SYSTEM_MASS / bodies.length; // kg
+        for (int i = 0; i < NUMBER_OF_BODIES; i++) {
+            double mass = Math.abs(random.nextGaussian()) * OVERALL_SYSTEM_MASS / NUMBER_OF_BODIES; // kg
             Vector3 massCenter = new Vector3(0.2 * random.nextGaussian() * AU, 0.2 * random.nextGaussian() * AU, 0.2 * random.nextGaussian() * AU);
             Vector3 currentMovement = new Vector3(0 + random.nextGaussian() * 5e3, 0 + random.nextGaussian() * 5e3, 0 + random.nextGaussian() * 5e3);
-            bodies[i] = new Body(mass, massCenter, currentMovement);
+            Body b = new Body(mass, massCenter, currentMovement);
+            bq.add(b);
+            bfm.put(b, new Vector3(0, 0, 0));
         }
         double seconds = 0;
 
         // simulation loop
         while (true) {
             seconds++; // each iteration computes the movement of the celestial bodies within one second.
-
             // merge bodies that have collided
+            /*
             for (int i = 0; i < bodies.length; i++) {
                 for (int j = i + 1; j < bodies.length; j++) {
                     if (bodies[j].distanceTo(bodies[i]) <
@@ -91,22 +95,45 @@ public class Simulation {
                     }
                 }
             }
+             */
 
             // for each body (with index i): compute the total force exerted on it.
-            for (int i = 0; i < bodies.length; i++) {
+            Body firstEl = bq.poll();
+            bq.add(firstEl);
+            Body currentEl = firstEl;
+            do {
+                for (int i = 0; i < bq.size() - 1; ++i) {
+                    Body b = bq.poll();
+                    bq.add(b);
+                    // add force to body
+                    Vector3 forceToAdd = currentEl.gravitationalForce(b);
+                    bfm.get(currentEl).plus(forceToAdd);
+                    if (i == bq.size() - 2) {
+                        currentEl = b;
+                    }
+                }
+            }
+            while (currentEl != firstEl);
+            /*
+            for (int i = 0; i < bq.size(); i++) {
                 forceOnBody[i] = new Vector3(0,0,0); // begin with zero
-                for (int j = 0; j < bodies.length; j++) {
+                for (int j = 0; j < bq.size(); j++) {
                     if (i != j) {
                         Vector3 forceToAdd = bodies[i].gravitationalForce(bodies[j]);
                         forceOnBody[i] = forceOnBody[i].plus(forceToAdd);
                     }
                 }
             }
+             */
             // now forceOnBody[i] holds the force vector exerted on body with index i.
 
             // for each body (with index i): move it according to the total force exerted on it.
-            for (int i = 0; i < bodies.length; i++) {
-                bodies[i].move(forceOnBody[i]);
+            for (int i = 0; i < bq.size(); i++) {
+                Body b = bq.poll();
+                b.move(bfm.get(b));
+                bfm.put(b, new Vector3(0, 0,0));
+                bq.add(b);
+                // bodies[i].move(forceOnBody[i]);
             }
 
             // show all movements in the canvas only every hour (to speed up the simulation)
@@ -115,8 +142,10 @@ public class Simulation {
                 cd.clear(Color.BLACK);
 
                 // draw new positions
-                for (Body body : bodies) {
-                    body.draw(cd);
+                for (int i = 0; i < bq.size(); ++i) {
+                    Body b = bq.poll();
+                    b.draw(cd);
+                    bq.add(b);
                 }
 
                 // show new positions

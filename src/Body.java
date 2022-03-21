@@ -98,5 +98,9 @@ public class Body {
                 + this.currentMovement.toString() + " m/s";
     }
 
+    public double mass() {
+        return this.mass;
+    }
+
 }
 

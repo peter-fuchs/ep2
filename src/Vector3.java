@@ -39,7 +39,7 @@ public class Vector3 {
 
     // Returns the sum of this vector and -1*v.
     public Vector3 minus(Vector3 v) {
-        Vector3 mul = new Vector3(v.x, v.y, v.z);
+        Vector3 mul = Vector3.copy(v);
         return this.plus(mul.times(-1));
     }
 
