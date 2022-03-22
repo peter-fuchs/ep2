@@ -21,6 +21,12 @@ public class Vector3 {
         this.z = _z;
     }
 
+    public Vector3() {
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
+    }
+
     // Returns the sum of this vector and vector 'v'.
     public Vector3 plus(Vector3 v) {
         this.x += v.x;
