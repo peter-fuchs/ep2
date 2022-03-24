@@ -68,29 +68,7 @@ public class Simulation {
         // simulation loop
         while (true) {
             seconds++; // each iteration computes the movement of the celestial bodies within one second.
-            // merge bodies that have collided
-            /*
-            for (int i = 0; i < bodies.length; i++) {
-                for (int j = i + 1; j < bodies.length; j++) {
-                    if (bodies[j].distanceTo(bodies[i]) <
-                            bodies[j].radius() + bodies[i].radius()) {
-                        bodies[i] = bodies[i].merge(bodies[j]);
-                        Body[] bodiesOneRemoved = new Body[bodies.length - 1];
-                        for (int k = 0; k < bodiesOneRemoved.length; k++) {
-                            bodiesOneRemoved[k] = bodies[k < j ? k : k + 1];
-                        }
-                        bodies = bodiesOneRemoved;
 
-                        // since the body index i changed size there might be new collisions
-                        // at all positions of bodies, so start all over again
-                        i = -1;
-                        j = bodies.length;
-                    }
-                }
-            }
-             */
-
-            // for each body (with index i): compute the total force exerted on it.
             Body firstEl = bq.poll();
             bq.add(firstEl);
             Body currentEl = firstEl;
@@ -107,26 +85,13 @@ public class Simulation {
                 }
             }
             while (currentEl != firstEl);
-            /*
-            for (int i = 0; i < bq.size(); i++) {
-                forceOnBody[i] = new Vector3(0,0,0); // begin with zero
-                for (int j = 0; j < bq.size(); j++) {
-                    if (i != j) {
-                        Vector3 forceToAdd = bodies[i].gravitationalForce(bodies[j]);
-                        forceOnBody[i] = forceOnBody[i].plus(forceToAdd);
-                    }
-                }
-            }
-             */
-            // now forceOnBody[i] holds the force vector exerted on body with index i.
 
-            // for each body (with index i): move it according to the total force exerted on it.
             for (int i = 0; i < bq.size(); i++) {
                 Body b = bq.poll();
+                // move body, then reset to 0
                 b.move(bfm.get(b));
                 bfm.put(b, new Vector3(0, 0,0));
                 bq.add(b);
-                // bodies[i].move(forceOnBody[i]);
             }
 
             // show all movements in the canvas only every hour (to speed up the simulation)
