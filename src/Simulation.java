@@ -69,29 +69,25 @@ public class Simulation {
         while (true) {
             seconds++; // each iteration computes the movement of the celestial bodies within one second.
 
-            Body firstEl = bq.poll();
-            bq.add(firstEl);
-            Body currentEl = firstEl;
-            do {
-                for (int i = 0; i < bq.size() - 1; ++i) {
-                    Body b = bq.poll();
-                    bq.add(b);
-                    // add force to body
-                    Vector3 forceToAdd = currentEl.gravitationalForce(b);
-                    bfm.get(currentEl).plus(forceToAdd);
-                    if (i == bq.size() - 2) {
-                        currentEl = b;
+            BodyQueue outerloop = new BodyQueue(bq);
+            while (outerloop.size() > 0) {
+                Body el = outerloop.poll();
+                BodyQueue innerloop = new BodyQueue(bq);
+                while (innerloop.size() > 0) {
+                    Body el2 = innerloop.poll();
+                    if (el != el2) {
+                        Vector3 forceToAdd = el.gravitationalForce(el2);
+                        bfm.get(el).plus(forceToAdd);
                     }
                 }
             }
-            while (currentEl != firstEl);
 
-            for (int i = 0; i < bq.size(); i++) {
-                Body b = bq.poll();
+            BodyQueue reset = new BodyQueue(bq);
+            while (reset.size() > 0) {
+                Body b = reset.poll();
                 // move body, then reset to 0
                 b.move(bfm.get(b));
-                bfm.put(b, new Vector3(0, 0,0));
-                bq.add(b);
+                bfm.put(b, new Vector3());
             }
 
             // show all movements in the canvas only every hour (to speed up the simulation)
@@ -100,10 +96,10 @@ public class Simulation {
                 cd.clear(Color.BLACK);
 
                 // draw new positions
-                for (int i = 0; i < bq.size(); ++i) {
-                    Body b = bq.poll();
+                BodyQueue draw = new BodyQueue(bq);
+                while (draw.size() > 0) {
+                    Body b = draw.poll();
                     b.draw(cd);
-                    bq.add(b);
                 }
 
                 // show new positions
@@ -139,7 +135,7 @@ public class Simulation {
             Vector3 currentMovement = new Vector3(0 + random.nextGaussian() * 5e3, 0 + random.nextGaussian() * 5e3, 0 + random.nextGaussian() * 5e3);
             Body b = new Body(mass, massCenter, currentMovement);
             bq.add(b);
-            bfm.put(b, new Vector3(0, 0, 0));
+            bfm.put(b, new Vector3());
         }
     }
 }
