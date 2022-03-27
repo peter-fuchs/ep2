@@ -50,6 +50,16 @@ public class Aufgabe2Test {
         testValue(bfm.get(earth).distanceTo(new Vector3(0,0,0)), 0);
         testValue(bfm.get(mercury),null);
 
+        int numberOfPolls = bq.size() + 5;
+        for (int i = 0; i < numberOfPolls; ++i) {
+            bq.poll();
+        }
+        testValue(bq.size(), 0);
+        bq.add(sun);
+        testValue(bq.size(), 1);
+        testValue(bq.poll(), sun);
+
+
     }
 
     public static void testComparison(Object first, Object second, boolean expected) {

@@ -3,7 +3,6 @@
 //
 public class BodyForceMap {
 
-    //TODO: declare variables.
     private Body[] keys;
     private Vector3[] values;
     private int currSize;
@@ -11,8 +10,6 @@ public class BodyForceMap {
     // Initializes this map with an initial capacity.
     // Precondition: initialCapacity > 0.
     public BodyForceMap(int initialCapacity) {
-
-        //TODO: define constructor.
         this.keys = new Body[initialCapacity];
         this.values = new Vector3[initialCapacity];
         this.currSize = 0;
@@ -22,7 +19,6 @@ public class BodyForceMap {
     // the value is replaced and the old value is returned. Otherwise 'null' is returned.
     // Precondition: key != null.
     public Vector3 put(Body key, Vector3 force) {
-        //TODO: implement method.
         int index = this.getIndex(key);
         if (index > 0 && this.keys[index] != null && this.keys[index].mass() == key.mass()) {
             Vector3 returnVal = this.values[index];
@@ -55,8 +51,6 @@ public class BodyForceMap {
     // associated with the specified body. Returns 'null' if the key is not contained in this map.
     // Precondition: key != null.
     public Vector3 get(Body key) {
-        // since getIndex returns the position to insert (+1 if it's the same)
-        // subtract 1 to get the correct index
         int index = this.getIndex(key);
         if (this.keys[index] != null && this.keys[index].mass() == key.mass()) {
             return this.values[index];
@@ -69,12 +63,14 @@ public class BodyForceMap {
         return this.currSize;
     }
 
+    // returns the index with binary search
     private int getIndex(Body key) {
         int left = 0;
         int right = this.currSize - 1;
         while (left <= right) {
             int middle = left + ((right - left) / 2);
-            if (keys[middle].mass() == key.mass()) {
+            // if key is already in the set, return it
+            if (keys[middle] == key) {
                 return middle;
             }
             if (keys[middle].mass() < key.mass()) {
