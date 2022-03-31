@@ -78,7 +78,7 @@ public class Aufgabe3Test {
 
         testValue(bfm.put(earth, new Vector3(0, 0, 0)).distanceTo(earth.gravitationalForce(sun)), 0);
         testValue(bfm.get(earth).distanceTo(new Vector3(0, 0, 0)), 0);
-        testValue(bfm.get(mercury), mercury.gravitationalForce(sun));
+        testValue(bfm.get(mercury).distanceTo(mercury.gravitationalForce(sun)), 0);
 
     }
 
