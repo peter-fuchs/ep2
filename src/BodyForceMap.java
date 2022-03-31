@@ -20,7 +20,7 @@ public class BodyForceMap {
     // Precondition: key != null.
     public Vector3 put(Body key, Vector3 force) {
         int index = this.getIndex(key);
-        if (index > 0 && this.keys[index] != null && this.keys[index].mass() == key.mass()) {
+        if (index >= 0 && this.keys[index] == key) {
             Vector3 returnVal = this.values[index];
             this.values[index] = force;
             return returnVal;
@@ -52,7 +52,7 @@ public class BodyForceMap {
     // Precondition: key != null.
     public Vector3 get(Body key) {
         int index = this.getIndex(key);
-        if (this.keys[index] != null && this.keys[index].mass() == key.mass()) {
+        if (this.keys[index] == key) {
             return this.values[index];
         } else {
             return null;

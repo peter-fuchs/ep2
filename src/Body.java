@@ -9,16 +9,23 @@ public class Body {
     private Vector3 massCenter; // position of the mass center.
     private Vector3 currentMovement;
 
-    // Returns a copy of the body with new Vector3-objects for massCenter and currentMovement
-    private static Body copy(Body b) {
-        return new Body(b.mass, Vector3.copy(b.massCenter), Vector3.copy(b.currentMovement));
-    }
-
     // constructor
     public Body(double _mass, Vector3 _massCenter, Vector3 _currentMovement) {
         this.mass = _mass;
         this.massCenter = _massCenter;
         this.currentMovement = _currentMovement;
+    }
+
+    public Body() {
+        this.mass = 0;
+        this.massCenter = new Vector3();
+        this.currentMovement = new Vector3();
+    }
+
+    public Body(Body b) {
+        this.mass = b.mass;
+        this.massCenter = new Vector3(b.massCenter);
+        this.currentMovement = new Vector3(b.currentMovement);
     }
 
     // Returns the distance between the mass centers of this body and the specified body 'b'.
@@ -32,9 +39,7 @@ public class Body {
     // and G being the gravitational constant.
     // Hint: see simulation loop in Simulation.java to find out how this is done.
     public Vector3 gravitationalForce(Body b) {
-        // copy so it doesn't change the value of b
-        Vector3 copy = Vector3.copy(b.massCenter);
-        Vector3 direction = copy.minus(this.massCenter);
+        Vector3 direction = b.massCenter.minus(this.massCenter);
         double distance = direction.length();
         direction.normalize();
         double force = Simulation.G * this.mass * b.mass / (distance * distance);
@@ -47,11 +52,10 @@ public class Body {
     // Hint: see simulation loop in Simulation.java to find out how this is done.
     public void move(Vector3 force) {
         // F = m*a -> a = F/m
-        Vector3 newPosition =
-                force.times(1 / this.mass).plus(this.massCenter).plus(this.currentMovement);
+        Vector3 newPosition = this.massCenter.plus(force.times(1 / this.mass)).plus(this.currentMovement);
 
         // new minus old position.
-        Vector3 newMovement = Vector3.copy(newPosition).minus(this.massCenter);
+        Vector3 newMovement = newPosition.minus(this.massCenter);
 
         // update body state
         this.massCenter = newPosition;
@@ -68,13 +72,11 @@ public class Body {
     // Returns a new body that is formed by the collision of this body and 'b'. The impulse
     // of the returned body is the sum of the impulses of 'this' and 'b'.
     public Body merge(Body b) {
-        // copy so it doesn't change the value of b
-        Body copy = Body.copy(b);
         // calculate new mass before saving bc we need old mass here
-        double newMass = this.mass + copy.mass;
+        double newMass = this.mass + b.mass;
         // always copy the vectors so their value isn't wrongly changed (otherwise headaches...)
-        this.massCenter = Vector3.copy(this.massCenter).times(this.mass).plus(Vector3.copy(copy.massCenter).times(copy.mass)).times(1 / newMass);
-        this.currentMovement = this.currentMovement.times(this.mass).plus(copy.currentMovement.times(copy.mass)).times(
+        this.massCenter = this.massCenter.times(this.mass).plus(b.massCenter.times(b.mass)).times(1 / newMass);
+        this.currentMovement = this.currentMovement.times(this.mass).plus(b.currentMovement.times(b.mass)).times(
                         1.0 / newMass);
         this.mass = newMass;
         return this;

@@ -27,20 +27,28 @@ public class Vector3 {
         this.z = 0;
     }
 
+    public Vector3(Vector3 v) {
+        this.x = v.x;
+        this.y = v.y;
+        this.z = v.z;
+    }
+
     // Returns the sum of this vector and vector 'v'.
     public Vector3 plus(Vector3 v) {
-        this.x += v.x;
-        this.y += v.y;
-        this.z += v.z;
-        return this;
+        Vector3 result = new Vector3();
+        result.x = this.x + v.x;
+        result.y = this.y + v.y;
+        result.z = this.z + v.z;
+        return result;
     }
 
     // Returns the product of this vector and 'd'.
     public Vector3 times(double d) {
-        this.x *= d;
-        this.y *= d;
-        this.z *= d;
-        return this;
+        Vector3 result = new Vector3();
+        result.x = this.x * d;
+        result.y = this.y * d;
+        result.z = this.z * d;
+        return result;
     }
 
     // Returns the sum of this vector and -1*v.

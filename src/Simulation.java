@@ -1,7 +1,6 @@
 import codedraw.CodeDraw;
 
 import java.awt.*;
-import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -77,7 +76,7 @@ public class Simulation {
                     Body el2 = innerloop.poll();
                     if (el != el2) {
                         Vector3 forceToAdd = el.gravitationalForce(el2);
-                        bfm.get(el).plus(forceToAdd);
+                        bfm.put(el, bfm.get(el).plus(forceToAdd));
                     }
                 }
             }
