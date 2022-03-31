@@ -8,18 +8,23 @@ public class Body {
     private double mass;
     private Vector3 massCenter; // position of the mass center.
     private Vector3 currentMovement;
+    private Body mainBody;
 
     // constructor
-    public Body(double _mass, Vector3 _massCenter, Vector3 _currentMovement) {
-        this.mass = _mass;
-        this.massCenter = _massCenter;
-        this.currentMovement = _currentMovement;
+    public Body(double mass, Vector3 massCenter, Vector3 currentMovement) {
+        this.mass = mass;
+        this.massCenter = massCenter;
+        this.currentMovement = currentMovement;
+    }
+    public Body(double mass, Vector3 massCenter, Vector3 currentMovement, Body mainBody) {
+        this.mass = mass;
+        this.massCenter = massCenter;
+        this.currentMovement = currentMovement;
+        this.mainBody = mainBody;
     }
 
     public Body() {
-        this.mass = 0;
-        this.massCenter = new Vector3();
-        this.currentMovement = new Vector3();
+        new Body(0, new Vector3(), new Vector3());
     }
 
     public Body(Body b) {
@@ -96,7 +101,8 @@ public class Body {
     // mass, position (mass center) and current movement. Example:
     // "5.972E24 kg, position: [1.48E11,0.0,0.0] m, movement: [0.0,29290.0,0.0] m/s."
     public String toString() {
-        return this.mass + " kg, position: " + this.massCenter.toString() + " m, movement: "
+        return "Distance to main body: " + this.mainBody.distanceTo(this) + " Body attributes: "
+                + this.mass + " kg, position: " + this.massCenter.toString() + " m, movement: "
                 + this.currentMovement.toString() + " m/s";
     }
 
