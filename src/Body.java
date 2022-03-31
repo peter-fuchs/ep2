@@ -35,6 +35,9 @@ public class Body {
 
     // Returns the distance between the mass centers of this body and the specified body 'b'.
     public double distanceTo(Body b) {
+        if (b == null) {
+            return 0;
+        }
         return this.massCenter.distanceTo(b.massCenter);
     }
 
@@ -101,7 +104,7 @@ public class Body {
     // mass, position (mass center) and current movement. Example:
     // "5.972E24 kg, position: [1.48E11,0.0,0.0] m, movement: [0.0,29290.0,0.0] m/s."
     public String toString() {
-        return "Distance to main body: " + this.mainBody.distanceTo(this) + " Body attributes: "
+        return (this.mainBody != null ? "Distance to main body: " + this.distanceTo(this.mainBody) : "") + " Body attributes: "
                 + this.mass + " kg, position: " + this.massCenter.toString() + " m, movement: "
                 + this.currentMovement.toString() + " m/s";
     }
