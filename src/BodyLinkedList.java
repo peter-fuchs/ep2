@@ -16,19 +16,11 @@ public class BodyLinkedList {
     // and vice versa.
     // Precondition: list != null.
     public BodyLinkedList(BodyLinkedList list) {
-        MyBodyNode copy = null, prev = null, el = list.first;
+        MyBodyNode el = list.first;
         while (el != null) {
-            copy = new MyBodyNode(el.value(), null);
-            if (this.first == null) {
-                this.first = copy;
-            }
-            if (prev != null) {
-                prev.setNext(copy);
-            }
-            prev = copy;
+            this.addLast(el.value());
             el = el.next();
         }
-        this.last = copy;
         this.size = list.size;
     }
 

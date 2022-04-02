@@ -51,6 +51,8 @@ public class Simulation3 {
                 }
                 if (removedElements) {
                     tree.reorder(el, oldMass);
+                    // restart again
+                    mergeList = new BodyLinkedList(list);
                 }
                 el = mergeList.pollFirst();
             }
