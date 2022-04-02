@@ -15,16 +15,14 @@ public class Vector3 {
     }
 
     // constructor
-    public Vector3(double _x, double _y, double _z) {
-        this.x = _x;
-        this.y = _y;
-        this.z = _z;
+    public Vector3(double x, double y, double z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     public Vector3() {
-        this.x = 0;
-        this.y = 0;
-        this.z = 0;
+        new Vector3(0, 0,0);
     }
 
     public Vector3(Vector3 v) {
@@ -35,20 +33,12 @@ public class Vector3 {
 
     // Returns the sum of this vector and vector 'v'.
     public Vector3 plus(Vector3 v) {
-        Vector3 result = new Vector3();
-        result.x = this.x + v.x;
-        result.y = this.y + v.y;
-        result.z = this.z + v.z;
-        return result;
+        return new Vector3(this.x + v.x, this.y + v.y, this.z + v.z);
     }
 
     // Returns the product of this vector and 'd'.
     public Vector3 times(double d) {
-        Vector3 result = new Vector3();
-        result.x = this.x * d;
-        result.y = this.y * d;
-        result.z = this.z * d;
-        return result;
+        return new Vector3(this.x * d, this.y * d, this.z * d);
     }
 
     // Returns the sum of this vector and -1*v.
@@ -70,7 +60,7 @@ public class Vector3 {
 
     // Returns the length (norm) of this vector.
     public double length() {
-        return this.distanceTo(new Vector3(0,0,0)); // distance to origin.
+        return this.distanceTo(new Vector3()); // distance to origin.
     }
 
     // Normalizes this vector: changes the length of this vector such that it becomes 1.

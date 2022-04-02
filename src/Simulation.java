@@ -57,10 +57,11 @@ public class Simulation {
         // Body[] bodies = new Body[NUMBER_OF_BODIES];
         BodyQueue bq = new BodyQueue(NUMBER_OF_BODIES);
         BodyForceMap bfm = new BodyForceMap(NUMBER_OF_BODIES);
+        Body mainBody = new Body(OVERALL_SYSTEM_MASS / 8, new Vector3(), new Vector3());
 
         Random random = new Random(2022);
         // addSolarSystem(bq, bfm);
-        addRandom(bq, bfm, random);
+        addRandom(bq, bfm, random, mainBody);
 
         double seconds = 0;
 
@@ -93,6 +94,8 @@ public class Simulation {
             if (seconds % (3600) == 0) {
                 // clear old positions (exclude the following line if you want to draw orbits).
                 cd.clear(Color.BLACK);
+
+                System.out.println(new BodyQueue(bq).poll());
 
                 // draw new positions
                 BodyQueue draw = new BodyQueue(bq);
@@ -127,12 +130,12 @@ public class Simulation {
         bfm.put(mars, new Vector3());
     }
 
-    private static void addRandom(BodyQueue bq, BodyForceMap bfm, Random random) {
+    private static void addRandom(BodyQueue bq, BodyForceMap bfm, Random random, Body mainBody) {
         for (int i = 0; i < NUMBER_OF_BODIES; i++) {
             double mass = Math.abs(random.nextGaussian()) * OVERALL_SYSTEM_MASS / NUMBER_OF_BODIES; // kg
             Vector3 massCenter = new Vector3(0.2 * random.nextGaussian() * AU, 0.2 * random.nextGaussian() * AU, 0.2 * random.nextGaussian() * AU);
             Vector3 currentMovement = new Vector3(0 + random.nextGaussian() * 5e3, 0 + random.nextGaussian() * 5e3, 0 + random.nextGaussian() * 5e3);
-            Body b = new Body(mass, massCenter, currentMovement);
+            Body b = new Body(mass, massCenter, currentMovement, mainBody);
             bq.add(b);
             bfm.put(b, new Vector3());
         }
