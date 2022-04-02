@@ -155,7 +155,7 @@ public class BodyLinkedList {
                     prev.setNext(el.next());
                 } else {
                     // first element
-                    this.first = el;
+                    this.first = el.next();
                 }
                 list.addFirst(val);
             }
