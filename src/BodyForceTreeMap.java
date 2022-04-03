@@ -81,13 +81,12 @@ public class BodyForceTreeMap {
         if (element == null) {
             return null;
         }
-        MyTreeNode el = this.root;
-        MyTreeNode parent = null;
+        MyTreeNode el = this.root, parent = this.root;
         // loop through elements
         while (el != null) {
             parent = el;
             // if same element update value
-            if (element.key().mass() == el.key().mass()) {
+            if (element.key() == el.key()) {
                 Vector3 oldVal = el.value();
                 el.setValue(element.value());
                 return oldVal;
