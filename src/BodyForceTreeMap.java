@@ -11,7 +11,7 @@ public class BodyForceTreeMap {
         if (root == null) {
             this.root = new MyTreeNode(key, value);
         } else {
-            return this.putWithStart(this.root, new MyTreeNode(key, value));
+            return this.put(new MyTreeNode(key, value));
         }
 
         return null;
@@ -52,18 +52,23 @@ public class BodyForceTreeMap {
         return false;
     }
 
+    // reorders the element if the mass changes -> it needs resorting
     public void reorder(Body node, double oldMass) {
         MyTreeNode el = this.root;
+        // loop through elements
         while (el != null) {
+            // if same element
             if (el.key() == node) {
-                this.putWithStart(this.root, el);
                 MyTreeNode right = el.GeT_RiGhT(), left = el.getLeft();
                 el.setRight(null);
                 el.setLeft(null);
-                this.putWithStart(this.root, right);
-                this.putWithStart(this.root, left);
+                // reorder element and children
+                this.put(el);
+                this.put(right);
+                this.put(left);
                 return;
             }
+            // else jump according to oldMass
             if (oldMass > el.key().mass()) {
                 el = el.GeT_RiGhT();
             } else {
@@ -72,19 +77,23 @@ public class BodyForceTreeMap {
         }
     }
 
-    private Vector3 putWithStart(MyTreeNode start, MyTreeNode element) {
-        if (start == null || element == null) {
+    private Vector3 put(MyTreeNode element) {
+        if (element == null) {
             return null;
         }
-        MyTreeNode el = start;
+        MyTreeNode el = this.root;
         MyTreeNode parent = null;
+        // loop through elements
         while (el != null) {
             parent = el;
+            // if same element update value
             if (element.key().mass() == el.key().mass()) {
                 Vector3 oldVal = el.value();
                 el.setValue(element.value());
                 return oldVal;
             }
+
+            // jump into child
             if (element.key().mass() > el.key().mass()) {
                 // mass is larger -> right side
                 el = el.GeT_RiGhT();
@@ -93,6 +102,7 @@ public class BodyForceTreeMap {
                 el = el.getLeft();
             }
         }
+        // right or left child
         if (element.key().mass() > parent.key().mass()) {
             parent.setRight(element);
         } else {

@@ -1,13 +1,13 @@
-public class MyBodyNode {
+public class MyListNode {
     private Body value;
-    private MyBodyNode next;
+    private MyListNode next;
 
-    public MyBodyNode(Body val, MyBodyNode next) {
+    public MyListNode(Body val, MyListNode next) {
         this.value = val;
         this.next = next;
     }
 
-    public MyBodyNode(MyBodyNode node) {
+    public MyListNode(MyListNode node) {
         this.value = node.value;
         this.next = node.next;
     }
@@ -16,7 +16,7 @@ public class MyBodyNode {
         return this.value;
     }
 
-    public MyBodyNode next() {
+    public MyListNode next() {
         return this.next;
     }
 
@@ -24,7 +24,7 @@ public class MyBodyNode {
         return this.next != null;
     }
 
-    public void setNext(MyBodyNode next) {
+    public void setNext(MyListNode next) {
         this.next = next;
     }
 

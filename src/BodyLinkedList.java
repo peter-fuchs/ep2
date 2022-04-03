@@ -1,7 +1,7 @@
 // A list of bodies implemented as a linked list.
 // The number of elements of the list is not limited.
 public class BodyLinkedList {
-    private MyBodyNode first, last;
+    private MyListNode first, last;
     private int size;
 
     // Initializes 'this' as an empty list.
@@ -16,7 +16,7 @@ public class BodyLinkedList {
     // and vice versa.
     // Precondition: list != null.
     public BodyLinkedList(BodyLinkedList list) {
-        MyBodyNode el = list.first;
+        MyListNode el = list.first;
         while (el != null) {
             this.addLast(el.value());
             el = el.next();
@@ -27,9 +27,9 @@ public class BodyLinkedList {
     // Inserts the specified element 'body' at the beginning of this list.
     public void addFirst(Body body) {
         if (this.size() == 0) {
-            this.first = this.last = new MyBodyNode(body, null);
+            this.first = this.last = new MyListNode(body, null);
         } else {
-            this.first = new MyBodyNode(body, this.first);
+            this.first = new MyListNode(body, this.first);
         }
         this.size++;
     }
@@ -37,9 +37,9 @@ public class BodyLinkedList {
     // Appends the specified element 'body' to the end of this list.
     public void addLast(Body body) {
         if (this.size() == 0) {
-            this.first = this.last = new MyBodyNode(body, null);
+            this.first = this.last = new MyListNode(body, null);
         } else {
-            MyBodyNode node = new MyBodyNode(body, null);
+            MyListNode node = new MyListNode(body, null);
             this.last.setNext(node);
             this.last = node;
         }
@@ -82,13 +82,14 @@ public class BodyLinkedList {
             return null;
         }
         if (this.size == 1) {
+            // empty list
             Body val = this.last.value();
             this.last = this.first = null;
             this.size--;
             return val;
         }
         Body val = this.last.value();
-        MyBodyNode el = this.first;
+        MyListNode el = this.first;
         for (int i = 0; i < this.size - 2; ++i) {
             el = el.next();
         }
@@ -101,13 +102,13 @@ public class BodyLinkedList {
     // Inserts the specified element 'body' at the specified position in this list.
     // Precondition: i >= 0 && i <= size().
     public void add(int i, Body body) {
-        MyBodyNode el = first;
-        MyBodyNode prev = null;
+        MyListNode el = first;
+        MyListNode prev = null;
         for (int j = 0; j < i; ++j) {
             prev = el;
             el = el.next();
         }
-        MyBodyNode node = new MyBodyNode(body, el);
+        MyListNode node = new MyListNode(body, el);
         if (prev != null) {
             prev.setNext(node);
         }
@@ -120,7 +121,7 @@ public class BodyLinkedList {
         if (this.size <= 0) {
             return null;
         }
-        MyBodyNode el = first;
+        MyListNode el = first;
         for (int j = 0; j < i; ++j) {
             el = el.next();
         }
@@ -130,7 +131,7 @@ public class BodyLinkedList {
     // Returns the index of the first occurrence of the specified element in this list, or -1 if
     // this list does not contain the element.
     public int indexOf(Body body) {
-        MyBodyNode el = first;
+        MyListNode el = first;
         int i = 0;
         while (el != null) {
             if (el.value() == body) {
@@ -145,30 +146,37 @@ public class BodyLinkedList {
     // Removes all bodies of this list, which are colliding with the specified
     // body. Returns a list with all the removed bodies.
     public BodyLinkedList removeCollidingWith(Body body) {
+        // list with all the removed elements
         BodyLinkedList list = new BodyLinkedList();
-        MyBodyNode el = this.first;
-        MyBodyNode prev = null;
+        MyListNode el = this.first, prev = null;
+        // loop through all elements
         while (el != null) {
             Body val = el.value();
+            // only check distance if not the same body
             if (val != body && val.distanceTo(body) < val.radius() + body.radius()) {
+                // delete node el (set next element of previous node to next node)
                 if (prev != null) {
                     prev.setNext(el.next());
                 } else {
-                    // first element
+                    // in case it's the first element, set this.first
                     this.first = el.next();
                 }
+                // add to list
                 list.addFirst(val);
             }
+            // set previous element to current element
             prev = el;
+            // select next element
             el = el.next();
         }
+        // reduce size of this list by list size
         this.size -= list.size;
         return list;
     }
 
     // Returns the number of bodies in this list.
     public int size() {
-        MyBodyNode el = this.first;
+        MyListNode el = this.first;
         int i = 0;
         while (el != null) {
             i++;
