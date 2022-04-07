@@ -63,7 +63,7 @@ public class BodyQueue {
 
     // Precondition: bq != null
     public BodyQueue getJoined(BodyQueue bq) {
-        BodyQueue res = new BodyQueue(bq.size() + this.size());
+        BodyQueue res = new BodyQueue(bq.size() + this.size() + 1);
         BodyQueue copy1 = new BodyQueue(this);
         BodyQueue copy2 = new BodyQueue(bq);
         for (int i = 0; i < Math.min(bq.size(), this.size()); ++i) {
