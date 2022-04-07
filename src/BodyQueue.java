@@ -30,7 +30,8 @@ public class BodyQueue {
 
     // Adds the specified body 'b' to this queue.
     public void add(Body b) {
-        if (this.bodies.length - 1 >= 0) System.arraycopy(this.bodies, 0, this.bodies, 1, this.bodies.length - 1);
+        if (this.bodies.length - 1 >= 0)
+            System.arraycopy(this.bodies, 0, this.bodies, 1, this.bodies.length - 1);
         this.bodies[0] = b;
         this.currPos++;
         if (this.bodies.length == this.currPos) {
@@ -51,8 +52,35 @@ public class BodyQueue {
         return b;
     }
 
+    private Body get(int index) {
+        return this.bodies[index];
+    }
+
     // Returns the number of bodies in this queue.
     public int size() {
         return this.currPos;
+    }
+
+    // Precondition: bq != null
+    public BodyQueue getJoined(BodyQueue bq) {
+        BodyQueue res = new BodyQueue(bq.size() + this.size());
+        BodyQueue copy1 = new BodyQueue(this);
+        BodyQueue copy2 = new BodyQueue(bq);
+        for (int i = 0; i < Math.min(bq.size(), this.size()); ++i) {
+            res.add(copy2.poll());
+            res.add(copy1.poll());
+        }
+        for (int i = Math.min(bq.size(), this.size()); i < Math.max(this.size(), bq.size()); ++i) {
+            res.add((bq.size() > this.size() ? copy2 : copy1).poll());
+        }
+        return res;
+    }
+
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < this.size(); ++i) {
+            s.append(this.bodies[i]);
+        }
+        return s.toString();
     }
 }

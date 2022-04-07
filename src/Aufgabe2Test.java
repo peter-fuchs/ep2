@@ -36,6 +36,28 @@ public class Aufgabe2Test {
         bq.add(earth);
         testValue(bq.size(), 2);
         testValue(bqCopy.size(), 1);
+        System.out.println("Übungstest");
+        BodyQueue test = bq.getJoined(bqCopy);
+        testValue(test.size(), 3);
+        System.out.println("bqCopy: " + bqCopy);
+        System.out.println("bq: " + bq);
+        System.out.println(test);
+        bqCopy.add(new Body(bqCopy.poll()).merge(new Body(1E30, new Vector3(), new Vector3())));
+        test = bq.getJoined(bqCopy);
+        BodyQueue test2 = bqCopy.getJoined(bq);
+        testValue(test.size(), 3);
+        System.out.println("bqCopy: " + bqCopy);
+        System.out.println("bq: " + bq);
+        System.out.println(test);
+        System.out.println(test2);
+        bqCopy.add(bq.poll());
+        test = bq.getJoined(bqCopy);
+        test2 = bqCopy.getJoined(bq);
+        testValue(test.size(), 3);
+        System.out.println("bqCopy: " + bqCopy);
+        System.out.println("bq: " + bq);
+        System.out.println(test);
+        System.out.println(test2);
 
         // check basic functions of 'BodyForceMap'
         System.out.println("Test2:");
