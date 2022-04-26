@@ -113,5 +113,9 @@ public class Body {
         return this.mass;
     }
 
+    public Vector3 massCenter() {
+        return this.massCenter;
+    }
+
 }
 

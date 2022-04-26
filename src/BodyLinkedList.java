@@ -24,6 +24,11 @@ public class BodyLinkedList {
         this.size = list.size;
     }
 
+    public BodyLinkedList(Body body) {
+        new BodyLinkedList();
+        this.addFirst(body);
+    }
+
     // Inserts the specified element 'body' at the beginning of this list.
     public void addFirst(Body body) {
         if (this.size() == 0) {

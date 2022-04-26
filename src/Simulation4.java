@@ -48,6 +48,29 @@ public class Simulation4 {
 
         //TODO: implementation of this method according to 'Aufgabenblatt4.md'.
 
+        HierarchicalSystem hs = new HierarchicalSystem(sun, mercury, venus,
+                new HierarchicalSystem(earth, moon), new HierarchicalSystem(mars, deimos,
+                phobos), vesta, pallas, hygiea, ceres);
 
+        double seconds = 0.0;
+
+        // simulation loop
+        while (true) {
+            seconds++;
+            hs.addForceTo(hs);
+            hs.update();
+
+            // show all movements in the canvas only every hour (to speed up the simulation)
+            if (seconds % (3600) == 0) {
+                // clear old positions (exclude the following line if you want to draw orbits).
+                cd.clear(Color.BLACK);
+
+                // draw new positions
+                hs.draw(cd);
+
+                // show new positions
+                cd.show();
+            }
+        }
     }
 }
