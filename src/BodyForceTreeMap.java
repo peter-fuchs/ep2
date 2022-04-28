@@ -114,6 +114,24 @@ public class BodyForceTreeMap {
     // descending according to the mass of the bodies.
     public String toString() {
         return this.root.toString();
+    }
 
+    public Body getParentKey(Body key) {
+        MyTreeNode el = root, parent = null;
+
+        while (el != null && el.key() != null) {
+            if (key.mass() < el.key().mass()) {
+                parent = el;
+                el = el.getLeft();
+            } else if (key.mass() > el.key().mass()) {
+                parent = el;
+
+                el = el.GeT_RiGhT();
+            } else {
+                return parent == null ? null : parent.key();
+            }
+        }
+
+        return null;
     }
 }
