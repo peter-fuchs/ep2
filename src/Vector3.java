@@ -75,9 +75,9 @@ public class Vector3 {
     // Draws a filled circle with a specified radius centered at the (x,y) coordinates of this vector
     // in the canvas associated with 'cd'. The z-coordinate is not used.
     public void drawAsFilledCircle(CodeDraw cd, double radius) {
-        double x = cd.getWidth() * (this.x + Simulation.SECTION_SIZE / 2) / Simulation.SECTION_SIZE;
-        double y = cd.getWidth() * (this.y + Simulation.SECTION_SIZE / 2) / Simulation.SECTION_SIZE;
-        radius = cd.getWidth() * radius / Simulation.SECTION_SIZE;
+        double x = cd.getWidth() * (this.x + Simulation4.SECTION_SIZE / 2) / Simulation4.SECTION_SIZE;
+        double y = cd.getWidth() * (this.y + Simulation4.SECTION_SIZE / 2) / Simulation4.SECTION_SIZE;
+        radius = cd.getWidth() * radius / Simulation4.SECTION_SIZE;
         cd.fillCircle(x, y, Math.max(radius, 1.5));
     }
 
