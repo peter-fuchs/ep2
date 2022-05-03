@@ -52,17 +52,66 @@ public class Simulation5 {
 
         // create some additional bodies
         Body[] bodies = new Body[NUMBER_OF_BODIES];
+        MassiveLinkedList l = new MassiveLinkedList();
+        MassiveForceHashMap m = new MassiveForceHashMap();
+
+        l.addLast(sun);
+        l.addLast(earth);
+        l.addLast(moon);
+        l.addLast(mars);
+        l.addLast(deimos);
+        l.addLast(phobos);
+        l.addLast(mercury);
+        l.addLast(venus);
+        l.addLast(vesta);
+        l.addLast(pallas);
+        l.addLast(hygiea);
+        l.addLast(ceres);
 
         Random random = new Random(2022);
+
 
         for (int i = 0; i < bodies.length; i++) {
             bodies[i] = new Body(Math.abs(random.nextGaussian()) * OVERALL_SYSTEM_MASS / bodies.length,
                     new Vector3(0.2 * random.nextGaussian() * AU, 0.2 * random.nextGaussian() * AU, 0.2 * random.nextGaussian() * AU),
                     new Vector3(0 + random.nextGaussian() * 5e3, 0 + random.nextGaussian() * 5e3, 0 + random.nextGaussian() * 5e3));
+            l.addLast(bodies[i]);
+        }
+
+        for (int i = 0; i < l.size(); ++i) {
+            m.put(l.get(i), new Vector3());
         }
 
         //TODO: implementation of this method according to 'Aufgabenblatt5.md'.
         //  Add both, NamedBody- and Body-objects, to your simulation.
+        int seconds = 0;
 
+        while (true) {
+            seconds++;
+
+            for (int i = 0; i < l.size(); ++i) {
+                Massive massive = l.get(i);
+                Vector3 force = new Vector3();
+                for (int j = 0; j < l.size(); ++j) {
+                    if (i != j) {
+                        force = force.plus(massive.gravitationalForce(l.get(j)));
+                    }
+                }
+                m.put(massive, force);
+            }
+
+            for (int i = 0; i < l.size(); ++i) {
+                Massive massive = l.get(i);
+                massive.move(m.get(massive));
+            }
+
+            if (seconds % 3600 == 0) {
+                cd.clear(Color.BLACK);
+                for (int i = 0; i < l.size(); ++i) {
+                    l.get(i).draw(cd);
+                }
+                cd.show();
+            }
+        }
     }
 }

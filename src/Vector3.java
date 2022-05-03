@@ -1,6 +1,7 @@
 import codedraw.CodeDraw;
 
 import java.awt.*;
+import java.util.Objects;
 
 // This class represents vectors in a 3D vector space.
 public class Vector3 {
@@ -75,9 +76,9 @@ public class Vector3 {
     // Draws a filled circle with a specified radius centered at the (x,y) coordinates of this vector
     // in the canvas associated with 'cd'. The z-coordinate is not used.
     public void drawAsFilledCircle(CodeDraw cd, double radius) {
-        double x = cd.getWidth() * (this.x + Simulation4.SECTION_SIZE / 2) / Simulation4.SECTION_SIZE;
-        double y = cd.getWidth() * (this.y + Simulation4.SECTION_SIZE / 2) / Simulation4.SECTION_SIZE;
-        radius = cd.getWidth() * radius / Simulation4.SECTION_SIZE;
+        double x = cd.getWidth() * (this.x + Simulation5.SECTION_SIZE / 2) / Simulation5.SECTION_SIZE;
+        double y = cd.getWidth() * (this.y + Simulation5.SECTION_SIZE / 2) / Simulation5.SECTION_SIZE;
+        radius = cd.getWidth() * radius / Simulation5.SECTION_SIZE;
         cd.fillCircle(x, y, Math.max(radius, 1.5));
     }
 
@@ -87,5 +88,12 @@ public class Vector3 {
         return "["+x+","+y+","+z+"]";
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vector3 vector3 = (Vector3) o;
+        return Double.compare(vector3.x, x) == 0 && Double.compare(vector3.y, y) == 0 && Double.compare(vector3.z, z) == 0;
+    }
 }
 
