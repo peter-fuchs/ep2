@@ -38,4 +38,7 @@ public interface CosmicSystem extends Drawable {
     // resets all forces to zero.
     void update();
 
+    // Returns the overall number of cnetral bodies contained in this system and its subsystems.
+    int getNumberOfCentralBodies();
+
 }

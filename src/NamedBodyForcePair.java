@@ -69,6 +69,11 @@ public class NamedBodyForcePair implements CosmicSystem {
     }
 
     @Override
+    public int getNumberOfCentralBodies() {
+        return 0;
+    }
+
+    @Override
     public void draw(CodeDraw cd) {
         this.body.draw(cd);
     }
