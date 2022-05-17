@@ -60,9 +60,58 @@ public class Simulation6 {
                     new Vector3(0.2 * random.nextGaussian() * AU, 0.2 * random.nextGaussian() * AU, 0.2 * random.nextGaussian() * AU),
                     new Vector3(0 + random.nextGaussian() * 5e3, 0 + random.nextGaussian() * 5e3, 0 + random.nextGaussian() * 5e3));
         }
+        MassiveLinkedList l = new MassiveLinkedList();
+        MassiveForceTreeMap m = new MassiveForceTreeMap();
 
-        //TODO: implementation of this method according to 'Aufgabenblatt6.md'.
-        //  Add both, NamedBody- and Body-objects, to your simulation.
+        l.addLast(sun);
+        l.addLast(earth);
+        l.addLast(moon);
+        l.addLast(mars);
+        l.addLast(deimos);
+        l.addLast(phobos);
+        l.addLast(mercury);
+        l.addLast(venus);
+        l.addLast(vesta);
+        l.addLast(pallas);
+        l.addLast(hygiea);
+        l.addLast(ceres);
 
+
+        for (int i = 0; i < bodies.length; i++) {
+            bodies[i] = new Body(Math.abs(random.nextGaussian()) * OVERALL_SYSTEM_MASS / bodies.length,
+                    new Vector3(0.2 * random.nextGaussian() * AU, 0.2 * random.nextGaussian() * AU, 0.2 * random.nextGaussian() * AU),
+                    new Vector3(0 + random.nextGaussian() * 5e3, 0 + random.nextGaussian() * 5e3, 0 + random.nextGaussian() * 5e3));
+            l.addLast(bodies[i]);
+        }
+
+        for (int i = 0; i < l.size(); ++i) {
+            m.put(l.get(i), new Vector3());
+        }
+
+        int seconds = -1;
+
+        while (true) {
+            seconds++;
+
+            for (Massive massive : m) {
+                Vector3 force = new Vector3();
+                for (Massive massive2 : m) {
+                    if (massive != massive2) {
+                        force = force.plus(massive.gravitationalForce(massive2));
+                    }
+                }
+                m.put(massive, force);
+            }
+
+            for (Massive massive : m) {
+                massive.move(m.get(massive));
+            }
+
+            if (seconds % 3600 == 0) {
+                cd.clear(Color.BLACK);
+                m.draw(cd);
+                cd.show();
+            }
+        }
     }
 }

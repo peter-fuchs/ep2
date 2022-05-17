@@ -55,12 +55,14 @@ public class MassiveLinkedList {
     // Returns the last element in this list.
     // Returns 'null' if the list is empty.
     public Massive getLast() {
+        if (this.last == null) return null;
         return this.last.value();
     }
 
     // Returns the first element in this list.
     // Returns 'null' if the list is empty.
     public Massive getFirst() {
+        if (this.first == null) return null;
         return this.first.value();
     }
 
