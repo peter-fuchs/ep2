@@ -124,4 +124,16 @@ public class MassiveForceHashMap {
         return l;
     }
 
+    public int numberOfCollisions() {
+        int collisions = 0;
+        for (Massive key : keys) {
+            if (key != null) {
+                if (keys[key.hashCode() & (keys.length - 2)] != key) {
+                    collisions++;
+                }
+            }
+        }
+        return collisions;
+    }
+
 }

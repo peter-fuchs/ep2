@@ -66,6 +66,13 @@ public class Aufgabe5Test {
         map.put(ceres1, new Vector3(0,0,0));
         map.put(mars1, new Vector3(0,0,0)); // inserted twice
         testValue(map.keyList().size(), 12);
+        System.out.println("Mars".hashCode() & 63);
+        System.out.println("u".hashCode() & 63);
+        System.out.println("Moon".hashCode() & 63);
+        System.out.println("a".hashCode() & 63);
+        map.put(new NamedBody("u", 0, new Vector3(), new Vector3()), new Vector3());
+        map.put(new NamedBody("a", 0, new Vector3(), new Vector3()), new Vector3());
+        System.out.println("number of collisions: " + map.numberOfCollisions());
 
         System.out.println("Test3:");
         testValue(map.toString().contains("Mars"), true);
