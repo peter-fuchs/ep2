@@ -128,7 +128,7 @@ public class MassiveForceHashMap {
         int collisions = 0;
         for (Massive key : keys) {
             if (key != null) {
-                if (keys[key.hashCode() & (keys.length - 2)] != key) {
+                if (!keys[key.hashCode() & (keys.length - 2)].equals(key)) {
                     collisions++;
                 }
             }
