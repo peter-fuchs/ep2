@@ -1,4 +1,6 @@
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class ReadDataUtil {
 
@@ -19,8 +21,14 @@ public class ReadDataUtil {
     // Precondition: b != null, path != null, day != null and has the format YYYY-MM-DD.
     public static boolean readConfiguration(NamedBody b, String path, String day)
             throws IOException {
-
-            // TODO: implement this method.
+            Path file = Path.of(path);
+            String s;
+            try {
+                s = Files.readString(file);
+            } catch (IOException e) {
+                throw new StateFileNotFoundException();
+            }
+            System.out.println(s);
             return false;
         }
     }

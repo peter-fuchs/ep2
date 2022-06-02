@@ -12,6 +12,9 @@ public interface MassiveSet extends MassiveIterable, Drawable {
     // Removes all elements from the set.
     void clear();
 
+    // returns true if no element of set is in this instance, else false
+    boolean containsNone(MassiveSet set);
+
     // Returns the number of elements in the set.
     int size();
 

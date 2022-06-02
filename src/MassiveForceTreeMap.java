@@ -1,5 +1,7 @@
 import codedraw.CodeDraw;
 
+import java.util.NoSuchElementException;
+
 // A map that associates an object of 'Massive' with a Vector3. The number of key-value pairs
 // is not limited.
 //
@@ -81,6 +83,18 @@ public class MassiveForceTreeMap implements MassiveSet {
     @Override
     public void clear() {
         this.root = null;
+    }
+
+    @Override
+    public boolean containsNone(MassiveSet set) {
+        for (Massive m : this) {
+            for (Massive _m : set) {
+                if (m.equals(_m)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     @Override
@@ -237,8 +251,16 @@ class MassiveForceTreeMapIterator implements MassiveIterator {
     }
 
     @Override
-    public Massive next() {
+    public Massive next() throws NoSuchElementException {
+        if (!this.hasNext()) {
+            throw new NoSuchElementException();
+        }
         return list.pollFirst();
+    }
+
+    @Override
+    public void remove() {
+
     }
 
     @Override

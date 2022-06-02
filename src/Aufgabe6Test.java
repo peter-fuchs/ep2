@@ -49,6 +49,14 @@ public class Aufgabe6Test {
         map.put(ceres1, new Vector3(0,0,0));
         map.put(mars1, new Vector3(0,0,0)); // inserted twice
 
+        System.out.println("Test8:");
+        MassiveForceTreeMap testS = new MassiveForceTreeMap();
+        testValue(testS.containsNone(map.getKeys()), true);
+        testS.put(sun1, new Vector3());
+        testValue(testS.containsNone(map.getKeys()), false);
+        testValue(map.containsNone(testS.getKeys()), false);
+        testValue(map.containsNone(map.getKeys()), false);
+
         HashSet<Massive> set1 = new HashSet<>();
         set1.add(sun1);
         set1.add(mercury1);
@@ -146,6 +154,7 @@ public class Aufgabe6Test {
             count++;
         }
         testValue(count, 12);
+
 
     }
 
