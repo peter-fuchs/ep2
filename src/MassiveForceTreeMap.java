@@ -76,7 +76,11 @@ public class MassiveForceTreeMap implements MassiveSet {
     @Override
     public void remove(Massive element) {
         if (root != null) {
-            this.root.remove(element, null, false);
+            if (this.root.size() == 1) {
+                this.root = null;
+            } else {
+                this.root.remove(element, null, false);
+            }
         }
     }
 
@@ -201,6 +205,7 @@ class TreeNode {
     public void remove(Massive el, TreeNode parent, boolean leftChild) {
         if (el.equals(this.key)) {
             TreeNode n = this.getBiggestLeftChild();
+            if (n == null) n = this.getSmallestRightChild();
             if (n == null) {
                 if (leftChild) parent.left = null;
                 else parent.right = null;
@@ -233,6 +238,22 @@ class TreeNode {
         return n;
     }
 
+    public TreeNode getSmallestRightChild() {
+        if (this.right == null) {
+            return null;
+        }
+        TreeNode p = this.right, n = this.right;
+        while (n.left != null) {
+            p = n;
+            n = n.left;
+        }
+        if (p == this.right) {
+            this.right = null;
+        }
+        p.left = null;
+        return n;
+    }
+
     public Vector3 getValue() {
         return value;
     }
@@ -244,10 +265,14 @@ class TreeNode {
 
 
 class MassiveForceTreeMapIterator implements MassiveIterator {
+    private final MassiveForceTreeMap set;
     private final MassiveLinkedList list;
+    private Massive el;
 
     MassiveForceTreeMapIterator(MassiveForceTreeMap set) {
+        this.set = set;
         this.list = set.toList();
+        this.el = null;
     }
 
     @Override
@@ -255,12 +280,14 @@ class MassiveForceTreeMapIterator implements MassiveIterator {
         if (!this.hasNext()) {
             throw new NoSuchElementException();
         }
-        return list.pollFirst();
+        this.el = list.pollFirst();
+        return el;
     }
 
     @Override
-    public void remove() {
-
+    public void remove() throws IllegalStateException {
+        if (el == null) throw new IllegalStateException();
+        set.remove(el);
     }
 
     @Override

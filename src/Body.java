@@ -117,5 +117,10 @@ public class Body implements Massive {
     public Vector3 massCenter() {
         return this.massCenter;
     }
+
+    public void setState(Vector3 position, Vector3 velocity) {
+        this.massCenter = position;
+        this.currentMovement = velocity;
+    }
 }
 

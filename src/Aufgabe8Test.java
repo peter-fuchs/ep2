@@ -1,4 +1,5 @@
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 
@@ -65,6 +66,41 @@ public class Aufgabe8Test {
             iterator.remove();
         }
         testValue(map.getKeys().size(),0);
+
+
+        try {
+            ReadDataUtil.readConfiguration(new NamedBody("test", new Body()), "states\\Ceres.txt", "2020-01-01");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        try {
+            ReadDataUtil.readConfiguration(new NamedBody("test", new Body()), "states\\error_no_start.txt", "2020-01-01");
+        } catch (IOException e) {
+            System.out.println("Error successfully thrown: " + e.getMessage());
+        }
+        try {
+            ReadDataUtil.readConfiguration(new NamedBody("test", new Body()), "states\\error_no_end.txt", "2020-01-01");
+        } catch (IOException e) {
+            System.out.println("Error successfully thrown: " + e.getMessage());
+        }
+
+        try {
+            ReadDataUtil.readConfiguration(new NamedBody("test", new Body()), "states\\error_wrong_format_1.txt", "2020-01-01");
+        } catch (IOException e) {
+            System.out.println("Error successfully thrown: " + e.getMessage());
+        }
+        try {
+            ReadDataUtil.readConfiguration(new NamedBody("test", new Body()), "states\\error_wrong_format_2.txt", "2020-01-01");
+        } catch (IOException e) {
+            System.out.println("Error successfully thrown: " + e.getMessage());
+        }
+        try {
+            ReadDataUtil.readConfiguration(new NamedBody("test", new Body()), "states\\error_wrong_format_3.txt", "2020-01-01");
+        } catch (IOException e) {
+            System.out.println("Error successfully thrown: " + e.getMessage());
+        }
 
     }
 
