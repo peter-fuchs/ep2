@@ -68,37 +68,51 @@ public class Aufgabe8Test {
         testValue(map.getKeys().size(),0);
 
 
+        System.out.println("Test4:");
+        Body emptyBody = new Body();
         try {
-            ReadDataUtil.readConfiguration(new NamedBody("test", new Body()), "states\\Ceres.txt", "2020-01-01");
+            ReadDataUtil.readConfiguration(new NamedBody("test", emptyBody), "states/Ceres.txt", "2020-01-01");
         } catch (IOException e) {
+            System.err.println("this should never be printed");
             e.printStackTrace();
         }
 
-
         try {
-            ReadDataUtil.readConfiguration(new NamedBody("test", new Body()), "states\\error_no_start.txt", "2020-01-01");
+            ReadDataUtil.readConfiguration(new NamedBody("test", emptyBody), "illegal/path.txt", "2020-01-01");
         } catch (IOException e) {
-            System.out.println("Error successfully thrown: " + e.getMessage());
-        }
-        try {
-            ReadDataUtil.readConfiguration(new NamedBody("test", new Body()), "states\\error_no_end.txt", "2020-01-01");
-        } catch (IOException e) {
+            testValue(e instanceof StateFileNotFoundException, true);
             System.out.println("Error successfully thrown: " + e.getMessage());
         }
 
         try {
-            ReadDataUtil.readConfiguration(new NamedBody("test", new Body()), "states\\error_wrong_format_1.txt", "2020-01-01");
+            ReadDataUtil.readConfiguration(new NamedBody("test", emptyBody), "states/error_no_start.txt", "2020-01-01");
         } catch (IOException e) {
+            testValue(e instanceof MarkerNotFoundException, true);
             System.out.println("Error successfully thrown: " + e.getMessage());
         }
         try {
-            ReadDataUtil.readConfiguration(new NamedBody("test", new Body()), "states\\error_wrong_format_2.txt", "2020-01-01");
+            ReadDataUtil.readConfiguration(new NamedBody("test", emptyBody), "states/error_no_end.txt", "2020-01-01");
         } catch (IOException e) {
+            testValue(e instanceof MarkerNotFoundException, true);
+            System.out.println("Error successfully thrown: " + e.getMessage());
+        }
+
+        try {
+            ReadDataUtil.readConfiguration(new NamedBody("test", emptyBody), "states/error_wrong_format_1.txt", "2020-01-01");
+        } catch (IOException e) {
+            testValue(e instanceof StateFileFormatException, true);
             System.out.println("Error successfully thrown: " + e.getMessage());
         }
         try {
-            ReadDataUtil.readConfiguration(new NamedBody("test", new Body()), "states\\error_wrong_format_3.txt", "2020-01-01");
+            ReadDataUtil.readConfiguration(new NamedBody("test", emptyBody), "states/error_wrong_format_2.txt", "2020-01-01");
         } catch (IOException e) {
+            testValue(e instanceof StateFileFormatException, true);
+            System.out.println("Error successfully thrown: " + e.getMessage());
+        }
+        try {
+            ReadDataUtil.readConfiguration(new NamedBody("test", emptyBody), "states/error_wrong_format_3.txt", "2020-01-01");
+        } catch (IOException e) {
+            testValue(e instanceof StateFileFormatException, true);
             System.out.println("Error successfully thrown: " + e.getMessage());
         }
 

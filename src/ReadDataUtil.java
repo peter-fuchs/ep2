@@ -31,63 +31,64 @@ public class ReadDataUtil {
     // Precondition: b != null, path != null, day != null and has the format YYYY-MM-DD.
     public static boolean readConfiguration(NamedBody b, String path, String day, int offset)
             throws IOException {
-        StringBuilder s = new StringBuilder();
         if (day.lastIndexOf('-') - day.indexOf('-') == 3)
             day = replaceMonthWithName(day);
         boolean found = false, read = false, readStart = false, readEnd = false;
+        BufferedReader in = null;
         try {
-            BufferedReader in = null;
-            try {
-                Reader r = new FileReader(path);
-                in = new BufferedReader(r);
-                String line;
-                int off = 0;
-                for (int i = 1; ( line = in. readLine ()) != null; i++) {
-                    if (line.equals("$$SOE")) {
-                        read = true;
-                        readStart = true;
-                        continue;
-                    } else if (line.equals("$$EOE")) {
-                        read = false;
-                        readEnd = true;
-                        continue;
-                    }
-                    if (read) {
-                        try {
-                            if (line.indexOf('-') == -1 && !readEnd) break;
-                            double jdtdb = Double.parseDouble(line.substring(0, line.indexOf(',')).trim());
-                            line = nextValue(line);
-                            String time = line.substring(0, line.indexOf(',')).trim();
-                            line = nextValue(line);
-                            double x = Double.parseDouble(line.substring(0, line.indexOf(',')).trim());
-                            line = nextValue(line);
-                            double y = Double.parseDouble(line.substring(0, line.indexOf(',')).trim());
-                            line = nextValue(line);
-                            double z = Double.parseDouble(line.substring(0, line.indexOf(',')).trim());
-                            line = nextValue(line);
-                            double vx = Double.parseDouble(line.substring(0, line.indexOf(',')).trim());
-                            line = nextValue(line);
-                            double vy = Double.parseDouble(line.substring(0, line.indexOf(',')).trim());
-                            line = nextValue(line);
-                            double vz = Double.parseDouble(line.substring(0, line.indexOf(',')).trim());
-                            if (time.contains(day)) {
-                                found = true;
-                            }
-                            if (found && off++ == offset) {
-                                b.setState(new Vector3(x, y, z).times(1000), new Vector3(vx, vy, vz).times(1000));
-                            }
-                        } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-                            throw new StateFileFormatException(e.getMessage(), e.getCause());
+            Reader r = new FileReader(path);
+            in = new BufferedReader(r);
+            String line;
+            int off = 0;
+            while ((line = in.readLine()) != null) {
+                if (line.equals("$$SOE")) {
+                    read = true;
+                    readStart = true;
+                    continue;
+                } else if (line.equals("$$EOE")) {
+                    read = false;
+                    readEnd = true;
+                    continue;
+                }
+                if (read) {
+                    try {
+                        if (line.indexOf('-') == -1 && !readEnd) break;
+                        // could be used, nobody knows :shrugs:
+                        double jdtdb = Double.parseDouble(line.substring(0, line.indexOf(',')).trim());
+                        line = nextValue(line);
+                        String time = line.substring(0, line.indexOf(',')).trim();
+                        line = nextValue(line);
+                        double x = Double.parseDouble(line.substring(0, line.indexOf(',')).trim());
+                        line = nextValue(line);
+                        double y = Double.parseDouble(line.substring(0, line.indexOf(',')).trim());
+                        line = nextValue(line);
+                        double z = Double.parseDouble(line.substring(0, line.indexOf(',')).trim());
+                        line = nextValue(line);
+                        double vx = Double.parseDouble(line.substring(0, line.indexOf(',')).trim());
+                        line = nextValue(line);
+                        double vy = Double.parseDouble(line.substring(0, line.indexOf(',')).trim());
+                        line = nextValue(line);
+                        double vz = Double.parseDouble(line.substring(0, line.indexOf(',')).trim());
+                        if (time.contains(day)) {
+                            found = true;
                         }
+                        if (found && off++ == offset) {
+                            b.setState(new Vector3(x, y, z).times(1000), new Vector3(vx, vy, vz).times(1000));
+                        }
+                    } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
+                        throw new StateFileFormatException(e.getMessage(), e.getCause());
                     }
                 }
-            } finally {
-                if (in != null) { in.close (); }
             }
-            if (!(readStart && readEnd))
-                throw new StateFileFormatException("Illegal file format: No start/end-line!", new Throwable());
-        } catch ( FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             throw new StateFileNotFoundException(e.getMessage(), e.getCause());
+        } finally {
+            if (in != null) { in.close (); }
+        }
+        if (!readStart) {
+            throw new MarkerNotFoundException("$$SOE not found", new Throwable());
+        } else if (!readEnd) {
+            throw new MarkerNotFoundException("$$EOE not found", new Throwable());
         }
         return found;
     }

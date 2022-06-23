@@ -25,7 +25,7 @@ public class Body implements Massive {
     }
 
     public Body() {
-        new Body(0, new Vector3(), new Vector3());
+        this(0, new Vector3(), new Vector3());
     }
 
     public Body(Body b) {

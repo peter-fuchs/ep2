@@ -23,7 +23,9 @@ public class Vector3 {
     }
 
     public Vector3() {
-        new Vector3(0, 0,0);
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
     }
 
     public Vector3(Vector3 v) {
